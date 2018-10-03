@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
     MPI_Barrier(MPI_COMM_WORLD);
     if (myid == 0) {
         gettimeofday(&tv_before, NULL);
-        printf("before : %ld %06lu\n", tv_before.tv_sec, tv_before.tv_usec);
+        //printf("before : %ld %06lu\n", tv_before.tv_sec, tv_before.tv_usec);
     }
     //それぞれのプロセスでmergesortをかける
     mergeSort(b, k);
@@ -82,8 +82,7 @@ int main(int argc, char **argv) {
     }
     if (myid == 0) {
         gettimeofday(&tv_after, NULL);
-        printf("after  : %ld %06lu\n", tv_after.tv_sec, tv_after.tv_usec);
-        printf("sorted array   = ");
+        //printf("after  : %ld %06lu\n", tv_after.tv_sec, tv_after.tv_usec);
         printf("sorting time : %ld sec + %06lu usec\n", tv_after.tv_sec - tv_before.tv_sec, tv_after.tv_usec - tv_before.tv_usec);
     }
     MPI_Finalize();
