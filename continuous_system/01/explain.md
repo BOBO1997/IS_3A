@@ -32,3 +32,7 @@
 <img src = "https://latex.codecogs.com/gif.latex?O(N&space;&plus;&space;\frac{N}{p}\log&space;{\frac{N}{p}})" />
 
 のようになります。これは、ほぼ線形に増えていく計算量で、実験結果とよく合致しますね。
+
+- グラフは以下のようになります。
+
+<img src="http://github..com/BOBO1997/IS_3A/blob/master/continuous_system/01/figure.png" alt="figure" title="figure">
