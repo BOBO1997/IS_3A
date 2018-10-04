@@ -31,6 +31,6 @@
 
 <img src = "https://latex.codecogs.com/gif.latex?O(N&space;&plus;&space;\frac{N}{p}\log&space;{\frac{N}{p}})" />
 
-のようになります。これは、ほぼ線形に増えていく計算量で、実験結果とよく合致しますね。式からもわかるように、特にNがpに対して大きい時に、線形性が顕著になります。
+のようになります。これは、nlognで増えていく計算量で、係数が小さくなります。下のグラフを見ると、実験結果とよく合致しますね(諸説)
 
 - 上の表をグラフにしたものは[figure.png](https://github.com/BOBO1997/IS_3A/blob/master/continuous_system/01/figure.png)にあります。
