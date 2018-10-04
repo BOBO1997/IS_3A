@@ -12,7 +12,7 @@ linear = np.poly1d(approximate)(num)
 plt.plot(num, linear, label = 'linear regression')
 plt.scatter(num, time, label = 'raw data')
 plt.xlabel("input size")
-plt.ylabel("time")
+plt.ylabel("time [sec]")
 # plt.xticks(0.0, 100.0, 10.0)
 # plt.yticks(0.0, 0.22, 0.02)
 
