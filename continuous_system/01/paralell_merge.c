@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
         int* a = NULL;
         if ((a = (int*)malloc(N * sizeof(int))) == NULL) { perror("calloc failed"); exit(1); }
         // 代表プロセスで乱数を生成
-        for (int i = 0; i < N; i++) { a[i] = rand() % N + 1; }
+        for (int i = 0; i < N; i++) { a[i] = rand() % N + 1; printf("%d ", a[i]);} printf("\n");
 
         // 乱数をそれぞれのプロセスに送る
         for (int i = 1; i < p; i++) MPI_Send(a + i * k, k, MPI_INT, i, 0, MPI_COMM_WORLD);
@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
     if (myid == 0) {
         gettimeofday(&tv_after, NULL);
         //printf("after  : %ld %06lu\n", tv_after.tv_sec, tv_after.tv_usec);
+		for (int i = 0; i < N; i++) printf("%d ", b[i]); printf("\n");
         printf("sorting time : %ld sec + %06lu usec\n", tv_after.tv_sec - tv_before.tv_sec, tv_after.tv_usec - tv_before.tv_usec);
     }
     MPI_Finalize();
