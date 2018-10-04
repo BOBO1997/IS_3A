@@ -21,7 +21,7 @@ num, time = np.loadtxt("./data1.txt", unpack = True)
 plt.scatter(num, time, label = 'raw data')
 plt.xlabel("input size")
 plt.ylabel("time [sec]")
-plt.yscale("log")
+# plt.xscale("log")
 # plt.xticks(0.0, 100.0, 10.0)
 # plt.yticks(0.0, 0.22, 0.02)
 
