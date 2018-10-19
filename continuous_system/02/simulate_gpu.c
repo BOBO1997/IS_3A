@@ -4,11 +4,23 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
+// device code
+__global__
+void kernel() {
+	
+
+	__syncthreads();
+
+	__syncthreads();
+}
+
+//host code
+__host__
 int main() {
     struct timeval tv_before, tv_after;
 	int size = 1000;
 	int iter = 100;
-	float u[2][1000][1000] = {0};
+	float even[2][1000][1000] = {0};
 	float r = 0.2;
 	for (int i = 1; i < size - 1; i++) {
 		for (int j = 1; j < size - 1; j++) {
