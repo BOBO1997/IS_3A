@@ -9,38 +9,22 @@
 
 // device code
 __global__
-void diffusion(float* u, int r, int size, int iter) {
+void diffusion(float* u, float r, int size, int iter) {
 	
 	int i = threadIdx.x / size;
-	//printf("%d\n", i);
 	int j = threadIdx.x % size;
 	for (int time = 0; time < iter; time++) {
 		float upper, lower, left, right;
 		if (i != 0 && i != (size - 1) && j != 0 && j != (size - 1)) {
-		//if (threadIdx.x > size && threadIdx.x < size * (size - 1) && threadIdx.x % size ) {
 			upper = u[threadIdx.x - size];
 			lower = u[threadIdx.x + size];
 			left  = u[threadIdx.x - 1];
 			right = u[threadIdx.x + 1];
 			__syncthreads();
-			//u[threadIdx.x] = (1 - 4 * r) * u[threadIdx.x] + r * (upper + lower + left + right);
-			u[threadIdx.x] = r * u[threadIdx.x] +  0.5;
+			u[threadIdx.x] = (1 - 4 * r) * u[threadIdx.x] + r * (upper + lower + left + right);
 		}
 		__syncthreads();
 	}
-
-	//u[0] = 1;
-	//u[threadIdx.x] = 0.5;
-	for (int k = 0; k < size * size; k++) {
-		__syncthreads();
-		if (threadIdx.x == k) {
-			//u[k] = (float)k / (float)(size * size);
-			//printf("%d, %d\n", i, j);
-		}
-	}
-	__syncthreads();
-	for (int time = 0; time < iter; time++)
-	if (threadIdx.x == 100) { u[threadIdx.x + i] = u[threadIdx.x] * r; printf("%d\n", i);}
 }
 
 //host code
