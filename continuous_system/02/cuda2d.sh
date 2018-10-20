@@ -5,5 +5,4 @@
 #SBATCH -o output.txt
 #SBATCH -e error.txt
 
-./simulate_gpu
-
+./cuda2d
