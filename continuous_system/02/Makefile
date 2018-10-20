@@ -1,12 +1,18 @@
-cpuobj = simulate_cpu.c
-gpuobj = simulate_gpu.cu
+CPUOBJS = simulate_cpu.c
+GPUOBJS = simulate_gpu.cu
 
+CC = gcc
+CFLAGS = -Wall -fopenmp
+NVCC = nvcc
 
 .PHONY: all
 all: simulate_cpu simulate_gpu
 
-simulate_cpu: cpuobj
-	$(CC) 
+simulate_cpu: $(CPUOBJS)
+	$(CC) $(CFLAGS) -o $@ $(CPUOBJS)
+
+simulate_gpu: $(GPUOBJS)
+	$(NVCC) -o $@ $(GPUOBJS)
 
 .PHONY: clean
 clean:
