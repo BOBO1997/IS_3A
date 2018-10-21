@@ -47,11 +47,12 @@ int main() {
 	cudaMemcpy(address, u, fsize, cudaMemcpyHostToDevice);
 	dim3 threadsPerBlock(size * size, 1);
 	dim3 numBlocks(1, 1);
-	gettimeofday(&tv_before, NULL);
-
-	diffusion<<<numBlocks, threadsPerBlock>>>(address, r, size, iter);
 	
+	gettimeofday(&tv_before, NULL);
+	diffusion<<<numBlocks, threadsPerBlock>>>(address, r, size, iter);
+	cudaDeviceSynchronize();
 	gettimeofday(&tv_after, NULL);
+
 	cudaMemcpy(out, address, fsize, cudaMemcpyDeviceToHost);
 	cudaFree(address);
 	for (int i = 0; i < size; i++) {
@@ -67,6 +68,7 @@ int main() {
 		}
 		printf("\033[0m\n");
 	}
+	
 	printf("\033[0m\n");
 	printf("time : %ld sec + %06lu usec\n", 
 			tv_after.tv_sec - tv_before.tv_sec, 
