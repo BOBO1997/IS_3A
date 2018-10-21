@@ -13,4 +13,4 @@
 
 ## 備考
 
-
+- [READMEのチートシート](https://gist.github.com/uupaa/6061529)
