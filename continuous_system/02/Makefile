@@ -1,23 +1,23 @@
 CPUOBJS = simulate_cpu.c
-CPUOPENMP = simulate_openmp.c
-GPUOBJS = simulate_gpu.cu
+CPUOMP 	= simulate_omp.c
+GPUOBJS = simulate_gpu1d.cu
 GPU2D   = simulate_gpu2d.cu
 
 CC = gcc
 CFLAGS = -Wall 
-MPFLAG = -fopenmp
+OMPFLAG = -fopenmp
 NVCC = nvcc
 
 .PHONY: all
-all: simulate_cpu simulate_openmp simulate_gpu simulate_gpu2d
+all: simulate_cpu simulate_omp simulate_gpu1d simulate_gpu2d
 
 simulate_cpu: $(CPUOBJS)
 	$(CC) $(CFLAGS) -o $@ $(CPUOBJS)
 
-simulate_openmp: $(CPUOPENMP)
-	$(CC) $(CFLAGS) $(MPFLAG) -o $@ $(CPUOPENMP)
+simulate_omp: $(CPUOMP)
+	$(CC) $(CFLAGS) $(OMPFLAG) -o $@ $(CPUOMP)
 
-simulate_gpu: $(GPUOBJS)
+simulate_gpu1d: $(GPUOBJS)
 	$(NVCC) -o $@ $(GPUOBJS)
 
 simulate_gpu2d: $(GPU2D)
@@ -25,4 +25,4 @@ simulate_gpu2d: $(GPU2D)
 
 .PHONY: clean
 clean:
-	-rm simulate_cpu simulate_openmp simulate_gpu simulate_gpu2d
+	-rm simulate_cpu simulate_omp simulate_gpu1d simulate_gpu2d
