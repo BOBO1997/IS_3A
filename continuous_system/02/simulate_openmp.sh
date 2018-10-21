@@ -5,4 +5,5 @@
 #SBATCH -o output.txt
 #SBATCH -e error.txt
 
-./simulate_cpu
+./simulate_openmp
+

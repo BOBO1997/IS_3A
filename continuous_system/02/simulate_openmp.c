@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <omp.h>
 #include <sys/time.h>
 
 int main() {
@@ -16,6 +17,7 @@ int main() {
 	for (int time = 1; time <= iter; time++) {
 		//#pragma omp parallel
 		if (time % 2 == 0) {
+			#pragma omp parallel for collapse(2)
 			for (int i = 1; i < size - 1; i++) {
 				for (int j = 1; j < size - 1; j++) {
 					u[0][i][j] = (1 - 4 * r) * u[1][i][j] + r * (u[1][i + 1][j] + u[1][i - 1][j] + u[1][i][j + 1] + u[1][i][j - 1]);
@@ -23,6 +25,7 @@ int main() {
 			}
 		}
 		else {
+			#pragma omp parallel for collapse(2)
 			for (int i = 1; i < size - 1; i++) {
 				for (int j = 1; j < size - 1; j++) {
 					u[1][i][j] = (1 - 4 * r) * u[0][i][j] + r * (u[0][i + 1][j] + u[0][i - 1][j] + u[0][i][j + 1] + u[0][i][j - 1]);

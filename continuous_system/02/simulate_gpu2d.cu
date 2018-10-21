@@ -65,7 +65,7 @@ int main() {
 	
 	cudaMemcpy2D(out, host_pitch, address, pitch, size * sizeof(float), size, cudaMemcpyDeviceToHost);
 	cudaFree(address);
-	
+	/*
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			int color = (int)(out[i][j] * 255);
@@ -73,16 +73,16 @@ int main() {
 		}
 		printf("\033[0m\n");
 	}
-	/*
+	
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			printf("%.3f ", out[i][j]);
 		}
 		printf("\033[0m\n");
 	}
-	*/
 	printf("\033[0m\n");
-	printf("time : %06ld sec + %lu usec\n", 
+	*/
+	printf("time : %ld sec + %06lu usec\n", 
 			tv_after.tv_sec - tv_before.tv_sec, 
 			tv_after.tv_usec - tv_before.tv_usec);
 }
