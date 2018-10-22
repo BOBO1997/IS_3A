@@ -12,23 +12,20 @@ def chi2(n, k):
 
 def large_number(cum, mu, iterator):
 	num_cum = len(cum)
-	s_list = np.ndarray([])
+	s_list = []
 	for i in range(iterator):
 		index = random.randrange(num_cum)
-		s_list = np.append(s_list, cum[index])
-	mean = np.mean(s_list)
+		s_list.append(cum[index])
+	mean = np.mean(np.array(s_list))
 	return mean - mu
 
 n = 30000
 cum = chi2(n, 2)
-diff = np.ndarray([])
-for i in range(2000):
-	diff = np.append(diff, large_number(cum, 0, i + 1))
+diff = []
+for i in range(10000):
+	diff.append(large_number(cum, 0, i + 1))
 
-cum = chi2(n, 2)
 plt.clf()
-#plt.ylim(0, 0.6)
-#plt.xlim(0, 25)
-plt.plot(diff)
+plt.plot(np.array(diff))
 plt.title("difference between average and true average")
 plt.savefig('report4_figures/large_number.png')
