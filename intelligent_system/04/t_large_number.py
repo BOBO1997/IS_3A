@@ -3,6 +3,9 @@ import numpy as np
 import random
 import math
 
+def normal_gauss(n):
+	return np.random.randn(n)
+
 def chi2(n, mean, disp, k):
 	cum = np.zeros(n)
 	for i in range(k):
@@ -25,18 +28,30 @@ def normalize(cum, mean, disp, iterator, n):
 	z = diff_val / (math.sqrt(disp) * math.sqrt(n))
 	return z
 
-iter_n = 10
+def t_dist(n, cum, k):
+	gaussian = normal_gauss(n)
+	t_sample = []
+	for i in range(n):
+		t_sample.append(gaussian[i] / math.sqrt(cum[i] / 2))
+	return np.array(t_sample)
+
+iter_n = 1000
 k = 2
-n = 30000
+n = 1000
 mean = 0
 disp = 3
 cum = chi2(n, mean, disp, k) # カイ二乗分布
-for i in range(iter_n): # 標本平均を取る際に使った標本の数
+t_samples = t_dist(n, cum, k)
+diff_samples = []
+for i in range(iter_n):
 	z_samples = []
-	for j in range(5000):
-		z = normalize(cum, mean, disp, (i + 1) * 10, n)
+	for j in range(100):
+		z = normalize(t_samples, mean, disp, i + 1, n) # Z_iterator
 		z_samples.append(z)
-	plt.clf()
-	plt.hist(np.array(z_samples), 100, normed=True)
-	plt.title("histgram : n = %d" %((i + 1) * 10))
-	plt.savefig('report4_figures/central_limit_%d.png' %((i + 1) * 10))
+	diff = diff_from_mean(z_samples, mean, i + 1)
+	diff_samples.append(z)
+
+plt.clf()
+plt.plot(np.array(diff_samples))
+plt.title("diff from mean")
+plt.savefig('report4_figures/t_large_number.png')
