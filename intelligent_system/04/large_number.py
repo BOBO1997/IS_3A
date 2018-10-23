@@ -5,7 +5,7 @@ import random
 def chi2(n, k):
 	cum = np.zeros(n)
 	for i in range(k):
-		x = np.random.normal(0, 3, n)
+		x = np.random.randn(n)
 		x2 = x ** 2
 		cum += x2
 	return cum

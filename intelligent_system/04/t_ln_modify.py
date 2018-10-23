@@ -9,7 +9,7 @@ def normal_gauss(n):
 def chi2(n, mean, disp, k):
 	cum = np.zeros(n)
 	for i in range(k):
-		x = np.random.normal(mean, disp, n)
+		x = np.random.randn(n)
 		x2 = x ** 2
 		cum += x2
 	return cum

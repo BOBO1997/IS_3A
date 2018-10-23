@@ -6,7 +6,7 @@ import math
 def chi2(n, mean, disp, k):
 	cum = np.zeros(n)
 	for i in range(k):
-		x = np.random.normal(mean, disp, n)
+		x = np.random.randn(n)
 		x2 = x ** 2
 		cum += x2
 	return cum
@@ -25,7 +25,7 @@ def normalize(cum, mean, disp, iterator, n):
 	z = diff_val / (math.sqrt(disp) * math.sqrt(n))
 	return z
 
-iter_n = 10
+iter_n = 15
 k = 2
 n = 30000
 mean = 0
@@ -34,9 +34,12 @@ cum = chi2(n, mean, disp, k) # カイ二乗分布
 for i in range(iter_n): # 標本平均を取る際に使った標本の数
 	z_samples = []
 	for j in range(5000):
-		z = normalize(cum, mean, disp, (i + 1) * 10, n)
+		z = normalize(cum, mean, disp, (i + 1), n)
+		#z = normalize(cum, mean, disp, (i + 1) * 10, n)
 		z_samples.append(z)
 	plt.clf()
 	plt.hist(np.array(z_samples), 100, normed=True)
-	plt.title("histgram : n = %d" %((i + 1) * 10))
-	plt.savefig('report4_figures/central_limit_%d.png' %((i + 1) * 10))
+	plt.title("histgram : n = %d" %((i + 1)))
+	#plt.title("histgram : n = %d" %((i + 1) * 10))
+	plt.savefig('report4_figures/central_limit_%d.png' %((i + 1)))
+	#plt.savefig('report4_figures/central_limit_%d.png' %((i + 1) * 10))

@@ -9,7 +9,7 @@ def normal_gauss(n):
 def chi2(n, mean, disp, k):
 	cum = np.zeros(n)
 	for i in range(k):
-		x = np.random.normal(mean, disp, n)
+		x = np.random.randn(n)
 		x2 = x ** 2
 		cum += x2
 	return cum
@@ -39,7 +39,7 @@ iter_n = 10
 k = 2
 n = 30000
 mean = 0
-disp = 3
+disp = 1
 cum = chi2(n, mean, disp, k) # カイ二乗分布
 t_samples = t_dist(n, cum, k) # t分布
 for i in range(iter_n): # 標本平均を取る際に使った標本の数
