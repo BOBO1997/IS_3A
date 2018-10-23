@@ -44,7 +44,7 @@ cum = chi2(n, mean, disp, k) # カイ二乗分布
 t_samples = t_dist(n, cum, k) # t分布
 for i in range(iter_n): # 標本平均を取る際に使った標本の数
 	z_samples = []
-	for j in range(5000):
+	for j in range(20000):
 		z = normalize(t_samples, mean, disp, (i + 1) * 10, n)
 		z_samples.append(z)
 	plt.clf()

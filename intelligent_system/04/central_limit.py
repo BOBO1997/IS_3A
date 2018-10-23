@@ -3,7 +3,7 @@ import numpy as np
 import random
 import math
 
-def chi2(n, mean, disp, k):
+def chi2(n, mean, k):
 	cum = np.zeros(n)
 	for i in range(k):
 		x = np.random.randn(n)
@@ -30,16 +30,16 @@ k = 2
 n = 30000
 mean = 0
 disp = 3
-cum = chi2(n, mean, disp, k) # カイ二乗分布
+cum = chi2(n, mean, k) # カイ二乗分布
 for i in range(iter_n): # 標本平均を取る際に使った標本の数
 	z_samples = []
-	for j in range(5000):
-		z = normalize(cum, mean, disp, (i + 1), n)
-		#z = normalize(cum, mean, disp, (i + 1) * 10, n)
+	for j in range(20000):
+		#z = normalize(cum, mean, disp, (i + 1), n)
+		z = normalize(cum, mean, disp, (i + 1) * 10, n)
 		z_samples.append(z)
 	plt.clf()
 	plt.hist(np.array(z_samples), 100, normed=True)
-	plt.title("histgram : n = %d" %((i + 1)))
-	#plt.title("histgram : n = %d" %((i + 1) * 10))
-	plt.savefig('report4_figures/central_limit_%d.png' %((i + 1)))
-	#plt.savefig('report4_figures/central_limit_%d.png' %((i + 1) * 10))
+	#plt.title("histgram : n = %d" %((i + 1)))
+	plt.title("histgram : n = %d" %((i + 1) * 10))
+	#plt.savefig('report4_figures/central_limit_%d.png' %((i + 1)))
+	plt.savefig('report4_figures/central_limit_%d.png' %((i + 1) * 10))
