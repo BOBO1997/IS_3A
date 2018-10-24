@@ -14,12 +14,11 @@ void diffusion(float* u, float r, int size, int iter) {
 	int i = threadIdx.x / size;
 	int j = threadIdx.x % size;
 	for (int time = 0; time < iter; time++) {
-		float upper, lower, left, right;
 		if (i != 0 && i != (size - 1) && j != 0 && j != (size - 1)) {
-			upper = u[threadIdx.x - size];
-			lower = u[threadIdx.x + size];
-			left  = u[threadIdx.x - 1];
-			right = u[threadIdx.x + 1];
+			float upper = u[threadIdx.x - size];
+			float lower = u[threadIdx.x + size];
+			float left  = u[threadIdx.x - 1];
+			float right = u[threadIdx.x + 1];
 			__syncthreads();
 			u[threadIdx.x] = (1 - 4 * r) * u[threadIdx.x] + r * (upper + lower + left + right);
 		}
