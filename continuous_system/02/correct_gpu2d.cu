@@ -79,7 +79,7 @@ int main() {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			int color = (int)(out[i][j] * 255);
-			printf("\033[48;2;%d;%d;255m ", color, color);
+			printf("\033[48;2;%d;%d;255m  ", color, color);
 		}
 		printf("\033[0m\n");
 	}
