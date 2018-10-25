@@ -1,2 +1,2 @@
-host_pitch = 2048, device_pitch = 2048
-time : 0 sec + 002088 usec
+host_pitch = 256, device_pitch = 512
+time : 0 sec + 000152 usec
