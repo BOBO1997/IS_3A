@@ -41,7 +41,7 @@ int main() {
 			printf("\033[48;2;%d;%d;255m  ", color, color);
 			//printf("%.3f ", u[0][i][j]); //数値をdump
 		}
-		printf("\n");
+		printf("\033[0m\n");
 	}
 	printf("\033[0m\n");
 	*/
