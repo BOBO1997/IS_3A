@@ -8,7 +8,8 @@
 
 ## ファイル構造
 
-- 連続系アルゴリズム演習のコードは[continuous\_system](https://github.com/BOBO1997/IS_3A/tree/master/continuous_system)にあります。
+- 連続系アルゴリズム課題のコードは[continuous\_system](https://github.com/BOBO1997/IS_3A/tree/master/continuous_system)にあります。
+- 連続系アルゴリズム演習のコードは[continuous\_exercise](https://github.com/BOBO1997/IS_3A/tree/master/continuous_exercise)にあります。
 - 知能システム論のコードは[intelligent\_system](https://github.com/BOBO1997/IS_3A/tree/master/intelligent_system)にあります。
 - min-camlを改造したコンパイラのコードはこのレポジトリとはひとまず独立しています。
 

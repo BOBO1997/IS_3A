@@ -32,24 +32,27 @@ def backtracking(f, diff, a, b, x, y, threshold, max_iter):
 	return x_list, y_list
 
 if __name__ == '__main__':
-	levels = []
-	for i in range(20):
-		levels.append(1 * (i + 1))
 	a = 0.5
 	b = 0.8
 	threshold = 0.01
 	max_iter = 10000
-	x_init = random.uniform(-5.0, 5.0)
-	y_init = random.uniform(-5.0, 5.0)
-	# x_init, y_init = 4, 2
-	x_list, y_list = backtracking(f, diff, a, b, x_init, y_init, threshold, max_iter)
+	
+	levels = []
+	for i in range(20):
+		levels.append(1 * (i + 1))
 	x = np.linspace(-5, 5, 100)
 	y = np.linspace(-5, 5, 100)
 	X, Y = np.meshgrid(x, y)
-	plt.scatter(x_list, y_list, s = 5, c = 'orange')
 	Z = np.sqrt(10 * X ** 2 + Y ** 2)
-	plt.plot(x_list, y_list)
 	plt.contour(X, Y, Z, levels = levels)
+
+	x_init = random.uniform(-5.0, 5.0)
+	y_init = random.uniform(-5.0, 5.0)
+	x_init, y_init = 4, 4
+	x_list, y_list = backtracking(f, diff, a, b, x_init, y_init, threshold, max_iter)
+	plt.scatter(x_list, y_list, s = 2, c = 'orange', zorder = 3)
+	plt.plot(x_list, y_list, zorder = 2)
+	
 	plt.xlabel("x")
 	plt.ylabel("y")
 	plt.title("Backtracking Line Search")
