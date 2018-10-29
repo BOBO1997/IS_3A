@@ -42,12 +42,19 @@ double calctime(double r, X x1, X x2, V v1, V v2) {
 	double vabs1 = vabs(v1);
 	double vabs2 = vabs(v2);
 	double rawcos = dot(v1, v2) / (vabs1 * vabs2);
-	if (rawcos == -1) {
-		return (dist(x1, x2) - 2 * r) / (vabs1 + vabs2);
-	}
-	else if (rawcos == 1) {
-		printf("%f, %f\n", vabs1, vabs2);
-		return (dist(x1, x2) - 2 * r) / fabs(vabs1 - vabs2);
+	if (rawcos == -1 || rawcos == 1) {
+		V vx;
+		vx.x = x1.x - x2.x;
+		vx.y = x1.y - x2.y;
+		double vxcos = dot(vx, v1) / (vabs(vx) * vabs1);
+		if (vxcos == 1 || vxcos == -1) {
+			if (rawcos == -1) return (dist(x1, x2) - 2 * r) / (vabs1 + vabs2);
+			else return (dist(x1, x2) - 2 * r) / fabs(vabs1 - vabs2);
+		}
+		else {
+			printf("%f\n", dot(vx, v1));
+			return -1;
+		}
 	}
 	else {
 		double cos = fabs(rawcos);

@@ -1,11 +1,12 @@
-OBJ = collapse.c
+OBJ = collision.c
 
-CC = g++
+# CC = g++
+CC = gcc
 CFLAGS = -Wall 
 .PHONY: all
-all: collapse
+all: collision
 collapse: $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $@
 .PHONY: clean
 clean:
-	-rm collapse
+	-rm collision
