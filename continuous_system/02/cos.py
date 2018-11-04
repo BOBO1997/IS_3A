@@ -10,7 +10,7 @@ def divide(a, b):
 	w = (3 - math.sqrt(5)) / 2
 	return a * w + b * (1 - w)
 
-def collision(f, diff, center, y, r, threshold, max_iter):
+def collision(f, diff, center, r, threshold, max_iter):
 	a, b, x = 0, 0, 0
 	if diff(center, r, center) < 0:
 		a = center
@@ -39,13 +39,14 @@ def time(h):
 	return math.sqrt(2 * h / 9.8)
 
 if __name__ == '__main__':
-	c = 10
-	y = 100
+	x = 10
+	y = 10
+	z = 100
 	r = 10
-
+	c = math.sqrt(x ** 2 + y ** 2)
 	threshold = 0.0000001
 	max_iter = 1000
 	
-	h = y - collision(f, diff, c, y, r, threshold, max_iter)
+	h = z - collision(f, diff, c, r, threshold, max_iter)
 	t = time(h)
 	print(t)
