@@ -15,11 +15,19 @@ def collision(f, diff, center, r, threshold, max_iter):
 	if diff(center, r, center) < 0:
 		a = center
 		b = center + math.pi
+		if a < center - r:
+			a = center - r
+		if b > center + r:
+			b = center + r
 		c = divide(b, a)
 		d = divide(a, b)
 	else:
 		a = center - math.pi
 		b = center
+		if a < center - r:
+			a = center - r
+		if b > center + r:
+			b = center + r
 		c = divide(b, a) # aより
 		d = divide(a, b) # bより
 	for _ in range(max_iter):
@@ -39,14 +47,15 @@ def time(h):
 	return math.sqrt(2 * h / 9.8)
 
 if __name__ == '__main__':
-	x = 10
-	y = 10
+	x = 3
+	y = 4
 	z = 100
-	r = 10
+	r = 2
 	c = math.sqrt(x ** 2 + y ** 2)
 	threshold = 0.0000001
 	max_iter = 1000
 	
 	h = z - collision(f, diff, c, r, threshold, max_iter)
+	print(h)
 	t = time(h)
 	print(t)
