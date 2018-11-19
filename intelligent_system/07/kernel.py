@@ -81,22 +81,27 @@ def cross_validation(n, k, lam, x_data, y_data):
 if __name__ == "__main__":
 	n = 1000
 	k = 10
-	lam = 0.5
+	lam = 0.1
 
 	x_data, y_data, x_org, y_org = generate_data(n)
 	sklearn.utils.shuffle(x_data, y_data)
-	plt.scatter(x_data, y_data, s = 1)
-	plt.plot(x_org, y_org, color = "g", label = "original", linewidth = 0.5)
-	
-	x_plot, y_plot, mse_list = cross_validation(n, k, lam, x_data, y_data)
-	print(mse_list)
-	error = np.average(mse_list)
-	plt.plot(x_plot, y_plot, color = "r", label = "predicted\n(h = 0.3, lambda = 0.5, error = {})".format(error), linewidth = 0.5)
 
-	plt.xlim(-3, 3)
-	plt.ylim(-0.6, 1.2)
-	plt.title("gaussian kernel model")
-	plt.legend(fontsize = 'x-small')
-	plt.xlabel("x")
-	plt.ylabel("y")
-	plt.savefig("kernel_h03.png")
+	for h in range([0.1, 0.5, 1]):
+		for lam in range([0.1, 0.5, 1]):
+			
+			plt.scatter(x_data, y_data, s = 1)
+			plt.plot(x_org, y_org, color = "g", label = "original", linewidth = 0.5)
+					
+			x_plot, y_plot, mse_list = cross_validation(n, k, lam, x_data, y_data)
+			print(mse_list)
+			error = np.average(mse_list)
+			plt.plot(x_plot, y_plot, color = "r", label = "predicted\n(h = 0.3, lambda = 0.1, error = {})".format(error), linewidth = 0.5)
+
+			plt.xlim(-3, 3)
+			plt.ylim(-0.6, 1.2)
+			plt.title("gaussian kernel model")
+			plt.legend(fontsize = 'x-small')
+			plt.xlabel("x")
+			plt.ylabel("y")
+			plt.savefig("kernel_h%dl%d.png" %(int(h * 10), int(lam * 10)))
+			plt.clf()
