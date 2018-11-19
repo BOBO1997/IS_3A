@@ -87,10 +87,8 @@ if __name__ == "__main__":
 	x_data, y_data, x_org, y_org = generate_data(n)
 	sklearn.utils.shuffle(x_data, y_data)
 	
-	for i in range(len(h_list)):
-		for j in range(len(lam_list)):
-			h = h_list[i]
-			lam = lam_list[j]
+	for h in h_list:
+		for lam in lam_list:
 
 			plt.scatter(x_data, y_data, s = 1)
 			plt.plot(x_org, y_org, color = "g", label = "original", linewidth = 0.5)
