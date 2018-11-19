@@ -8,20 +8,20 @@ import matplotlib.pyplot as plt
 def kernel(xi, xj, h = 0.3):
     return np.exp(- np.sum((xi - xj) ** 2) / (2 * h ** 2))
 
-def create_k_matrix(n, x_data):
+def create_k_matrix(n, h, x_data):
 	K = np.zeros((n, n), dtype = float)
 	for i in range(n):
 		for j in range(n):
-			K[i, j] = kernel(x_data[i], x_data[j])
+			K[i, j] = kernel(x_data[i], x_data[j], h)
 	return K
 
-def culc_theta(n, K, lam, y_data):
+def culc_theta(n, h, K, lam, y_data):
 	return np.dot(np.dot(np.linalg.inv(np.dot(K, K) + lam * np.eye(n)), K), y_data)
 
-def culc_theta_kernel(x, theta, x_data):
+def culc_theta_kernel(x, h, theta, x_data):
 	sum_theta_kernel = 0
 	for i in range(len(x_data)):
-		sum_theta_kernel += theta[i] * kernel(x, x_data[i])
+		sum_theta_kernel += theta[i] * kernel(x, x_data[i], h)
 	return sum_theta_kernel
 
 def generate_data(n):
@@ -34,16 +34,16 @@ def generate_data(n):
 		y_org.append( math.sin(math.pi * x) / (math.pi * x) + 0.1 * x )
 	return x_data, y_data, x_org, y_org
 
-def predict_plot(n, lam, x_data, y_data):
-	K = create_k_matrix(n, x_data)
-	theta = culc_theta(n, K, lam, y_data)
+def predict_plot(n, h, lam, x_data, y_data):
+	K = create_k_matrix(n, h, x_data)
+	theta = culc_theta(n, h, K, lam, y_data)
 	x_plot = np.arange(-3, 3, 0.01)
 	y_plot = np.zeros(len(x_plot))
 	for i in range(len(x_plot)):
-		y_plot[i] = culc_theta_kernel(x_plot[i], theta, x_data)
+		y_plot[i] = culc_theta_kernel(x_plot[i], h, theta, x_data)
 	return x_plot, y_plot, theta
 
-def cross_validation(n, k, lam, x_data, y_data):
+def cross_validation(n, k, h, lam, x_data, y_data):
 	size = n // k
 	N = n - size
 	n_plot = 600
@@ -66,12 +66,12 @@ def cross_validation(n, k, lam, x_data, y_data):
 			train_y_data = np.concatenate((y_data[:size * i], y_data[size * i + size:]))
 			test_x_data = x_data[i * size:i * size + size]
 			test_y_data = y_data[i * size:i * size + size]
-		train_x_plot, train_y_plot, theta = predict_plot(N, lam, train_x_data, train_y_data)
+		train_x_plot, train_y_plot, theta = predict_plot(N, h, lam, train_x_data, train_y_data)
 		x_plot_mat = np.concatenate((x_plot_mat, np.reshape(train_x_plot, (1, n_plot))))
 		y_plot_mat = np.concatenate((y_plot_mat, np.reshape(train_y_plot, (1, n_plot))))
 		test_f_data = []
 		for j in range(size):
-			test_f_data.append( culc_theta_kernel(test_x_data[j], theta, train_x_data) )
+			test_f_data.append( culc_theta_kernel(test_x_data[j], h, theta, train_x_data) )
 		mse_list.append( sklearn.metrics.mean_squared_error(test_f_data, test_y_data) )
 
 	ave_x_plot = np.average(x_plot_mat, axis = 0)
@@ -81,21 +81,24 @@ def cross_validation(n, k, lam, x_data, y_data):
 if __name__ == "__main__":
 	n = 1000
 	k = 10
-	lam = 0.1
+	h_list = [0.1, 0.5, 1]
+	lam_list = [0.1, 0.5, 1]
 
 	x_data, y_data, x_org, y_org = generate_data(n)
 	sklearn.utils.shuffle(x_data, y_data)
+	
+	for i in range(len(h_list)):
+		for j in range(len(lam_list)):
+			h = h_list[i]
+			lam = lam_list[j]
 
-	for h in range([0.1, 0.5, 1]):
-		for lam in range([0.1, 0.5, 1]):
-			
 			plt.scatter(x_data, y_data, s = 1)
 			plt.plot(x_org, y_org, color = "g", label = "original", linewidth = 0.5)
-					
-			x_plot, y_plot, mse_list = cross_validation(n, k, lam, x_data, y_data)
+			
+			x_plot, y_plot, mse_list = cross_validation(n, k, h, lam, x_data, y_data)
 			print(mse_list)
 			error = np.average(mse_list)
-			plt.plot(x_plot, y_plot, color = "r", label = "predicted\n(h = 0.3, lambda = 0.1, error = {})".format(error), linewidth = 0.5)
+			plt.plot(x_plot, y_plot, color = "r", label = "predicted\n(h = {0}, lambda = {1}, error = {2})".format(h, lam, error), linewidth = 0.5)
 
 			plt.xlim(-3, 3)
 			plt.ylim(-0.6, 1.2)
@@ -105,3 +108,4 @@ if __name__ == "__main__":
 			plt.ylabel("y")
 			plt.savefig("kernel_h%dl%d.png" %(int(h * 10), int(lam * 10)))
 			plt.clf()
+			print("finished case : %f %f" %(h, lam))
