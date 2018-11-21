@@ -78,7 +78,7 @@ if __name__ == "__main__":
 	nx1, nx2 = n_data
 	svm(n * 2, max_iters, e, b, c, p_data, n_data)
 	plt.scatter(px1, px2, s = 3, c = "r")
-	plt.scatter(nx1, nx2, s = 3, c = "b")
+	plt.scatter(nx1, nx2, s = 3, c = "w")
 	plt.title("svm")
 	plt.xlim(-16, 16)
 	plt.ylim(-16, 16)

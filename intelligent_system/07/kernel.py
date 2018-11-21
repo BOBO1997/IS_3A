@@ -30,7 +30,7 @@ def generate_data(n):
 		x = 6 * ((float(i + 1) / float(n - 1)) - 0.5)
 		x_data.append(x)
 		x_org.append(x)
-		y_data.append( math.sin(math.pi * x) / (math.pi * x) + 0.1 * x + random.normalvariate(0, 0.2 ** 2) )
+		y_data.append( math.sin(math.pi * x) / (math.pi * x) + 0.1 * x + random.normalvariate(0, 0.2) )
 		y_org.append( math.sin(math.pi * x) / (math.pi * x) + 0.1 * x )
 	return x_data, y_data, x_org, y_org
 
@@ -81,8 +81,8 @@ def cross_validation(n, k, h, lam, x_data, y_data):
 if __name__ == "__main__":
 	n = 1000
 	k = 10
-	h_list = [0.1, 0.5, 1]
-	lam_list = [0.1, 0.5, 1]
+	h_list = [0.05, 1, 5]
+	lam_list = [0.00000001, 0.01, 1]
 
 	x_data, y_data, x_org, y_org = generate_data(n)
 	sklearn.utils.shuffle(x_data, y_data)
@@ -104,6 +104,6 @@ if __name__ == "__main__":
 			plt.legend(fontsize = 'x-small')
 			plt.xlabel("x")
 			plt.ylabel("y")
-			plt.savefig("kernel_h%dl%d.png" %(int(h * 10), int(lam * 10)))
+			plt.savefig("kernel_h%dl%d.png" %(int(h * 100), int(lam * 100)))
 			plt.clf()
 			print("finished case : %f %f" %(h, lam))
