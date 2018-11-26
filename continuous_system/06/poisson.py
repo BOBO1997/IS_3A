@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 class SOR:
-	def __init__(self, A, x, b, omega, iters):
+	def __init__(self, A, x, b, omega, error, iters):
 		self.A = A # 不変
 		self.x = x # 更新値
 		self.b = b # 不変
 		self.omega = omega # 不変
+		self.error = error
 		self.iters = iters
 
 	def step(self):
@@ -20,7 +21,10 @@ class SOR:
 
 	def __call__(self):
 		for k in range(self.iters):
-			self.step()
+			if abs(np.sum(self.b)) >= self.error:
+				self.step()
+			else:
+				break
 		return self.x
 
 class Poisson:
@@ -81,7 +85,7 @@ class Poisson:
 		print(x.shape)
 		b = np.reshape(self.calc_b(), self.cells)
 		print(b.shape)
-		result = SOR(A / self.h ** 2, x, b, 1.95, 300)() # ここのxは端っこは含まれていない
+		result = SOR(A / self.h ** 2, x, b, 1.95, 0.000000001, 300)() # ここのxは端っこは含まれていない
 		result = np.reshape(result, (self.num, self.num))
 		print("diff = ", self.diffsum(result, self.calc_u()))
 		diff = self.diffmap(result, self.calc_u())
