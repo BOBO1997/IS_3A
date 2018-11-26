@@ -15,16 +15,22 @@ class SOR:
 	def step(self):
 		for i in range(self.x.shape[0]):
 			if i == 0:
-				self.x[i] = self.x[i] + self.omega * (self.b[i] - np.dot(self.A[i, :], self.x[:])) / self.A[i, i]
+				self.x[i] = self.x[i] + self.omega * (self.b[i] - self.A[i, :] @ self.x[:]) / self.A[i, i]
 			else:
-				self.x[i] = self.x[i] + self.omega * (self.b[i] - np.dot(self.A[i, :i], self.x[:i]) - np.dot(self.A[i, i:], self.x[i:])) / self.A[i, i]
+				self.x[i] = self.x[i] + self.omega * (self.b[i] - self.A[i, :i] @ self.x[:i] - self.A[i, i:] @ self.x[i:]) / self.A[i, i]
+
+	def calc_relative_error(self):
+		error = np.linalg.norm(self.b - self.A @ self.x) / np.linalg.norm(self.b)
+		print(error)
+		return error
 
 	def __call__(self):
 		for k in range(self.iters):
-			if np.argmax(np.abs(self.b)) >= self.error:
+			if self.calc_relative_error() >= self.error:
 				self.step()
 			else:
 				break
+			print(k)
 		return self.x
 
 class Poisson:
@@ -52,7 +58,7 @@ class Poisson:
 		return u
 
 	def diffsum(self, result, u):
-		return np.sum(abs(result - u))
+		return np.sum((result - u) ** 2) / 2
 
 	def diffmap(self, result, u):
 		return result - u
@@ -86,7 +92,7 @@ class Poisson:
 		print(x.shape)
 		b = np.reshape(self.calc_b(), self.cells)
 		print(b.shape)
-		result = SOR(A / self.h ** 2, x, b, 1.95, 0.00000000001, 300)() # ここのxは端っこは含まれていない
+		result = SOR(A / self.h ** 2, x, b, 1.95, 0.00000000001, 1000)() # ここのxは端っこは含まれていない
 		result = np.reshape(result, (self.num, self.num))
 		print("diff = ", self.diffsum(result, self.calc_u()))
 		diff = self.diffmap(result, self.calc_u())
