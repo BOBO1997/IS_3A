@@ -21,7 +21,7 @@ class SOR:
 
 	def __call__(self):
 		for k in range(self.iters):
-			if abs(np.sum(self.b)) >= self.error:
+			if np.argmax(np.abs(self.b)) >= self.error:
 				self.step()
 			else:
 				break
@@ -65,9 +65,10 @@ class Poisson:
 		plt.clf()
 
 	def plot3d(self, values, name):
+		x_range, y_range = np.meshgrid(self.range, self.range)  # 上述のサンプリング点(x,y)を使ったメッシュ生成
 		fig = plt.figure() #プロット領域の作成
 		ax = fig.gca(projection='3d') #プロット中の軸の取得。gca は"Get Current Axes" の略。
-		ax.plot_wireframe(self.range, self.range, values, color='blue',linewidth=0.3)
+		ax.plot_wireframe(x_range, y_range, values, color='blue',linewidth=0.3)
 		#ax.plot_surface(x_range, y_range, result, rstride=1, cstride=1, cmap='hsv', linewidth=0.3)
 		plt.savefig("%s3d.png" %(name))
 		plt.clf()
@@ -85,7 +86,7 @@ class Poisson:
 		print(x.shape)
 		b = np.reshape(self.calc_b(), self.cells)
 		print(b.shape)
-		result = SOR(A / self.h ** 2, x, b, 1.95, 0.000000001, 300)() # ここのxは端っこは含まれていない
+		result = SOR(A / self.h ** 2, x, b, 1.95, 0.00000000001, 300)() # ここのxは端っこは含まれていない
 		result = np.reshape(result, (self.num, self.num))
 		print("diff = ", self.diffsum(result, self.calc_u()))
 		diff = self.diffmap(result, self.calc_u())
