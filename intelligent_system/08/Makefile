@@ -1,11 +1,16 @@
 CC = g++
 CFALGS = -Wall
-SOURCE = dijkstra.cpp
+GREEDY = greedy.cpp
+DIJKSTRA = dijkstra.cpp
+
 
 .PHONY: clean
 
-dijkstra: $(SOURCE)
+greedy: $(GREEDY)
+	$(CC) $(CFLAGS) -o $@ $^
+
+dijkstra: $(DIJKSTRA)
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm dijkstra
+	rm greedy dijkstra
