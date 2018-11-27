@@ -13,7 +13,7 @@ def generate_data(n):
 		nx2 = (a + math.pi) * math.sin(a) + np.random.rand()
 		p_data = np.append(p_data, [[px1], [px2]], axis = 1)
 		n_data = np.append(n_data, [[nx1], [nx2]], axis = 1)
-	return p_data, n_data
+	return p_data, n_dat
 
 def kernel(xi, xj, h = 0.5): # 2 * h ** 2 = 1
     return np.exp(- np.sum((xi - xj) ** 2) / (2 * h ** 2))
