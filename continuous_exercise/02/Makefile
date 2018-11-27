@@ -14,22 +14,22 @@ NVCC = nvcc
 all: simulate_cpu simulate_omp simulate_gpu1d simulate_gpu2d accelerated_gpu2d correct_gpu2d
 
 simulate_cpu: $(CPUOBJS)
-	$(CC) $(CFLAGS) -o $@ $(CPUOBJS)
+	$(CC) $(CFLAGS) -o $@ $^
 
 simulate_omp: $(CPUOMP)
-	$(CC) $(CFLAGS) $(OMPFLAG) -o $@ $(CPUOMP)
+	$(CC) $(CFLAGS) $(OMPFLAG) -o $@ $^
 
 simulate_gpu1d: $(GPUOBJS)
-	$(NVCC) -o $@ $(GPUOBJS)
+	$(NVCC) -o $@ $^
 
 simulate_gpu2d: $(GPU2D)
-	$(NVCC) -o $@ $(GPU2D)
+	$(NVCC) -o $@ $^
 
 accelerated_gpu2d: $(A_GPU2D)
-	$(NVCC) -o $@ $(A_GPU2D)
+	$(NVCC) -o $@ $^
 
 correct_gpu2d: $(CORRECT)
-	$(NVCC) -o $@ $(CORRECT)
+	$(NVCC) -o $@ $^
 
 .PHONY: clean
 clean:
