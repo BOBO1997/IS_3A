@@ -6,7 +6,7 @@ int
 main()
 {
 	std::vector<int> a(2, 0); a[0] = 1; a[1] = 2;
-	std::vector<int> b(2, 0); b[0] = 2; b[1] = 1;
+	std::vector<int> b(2, 0); b[0] = 1; b[1] = 1;
 	std::vector<int> c(2, 0); c[0] = 3; c[1] = 1;
 	std::vector<int> d(2, 0); d[0] = 4; d[1] = 2;
     std::priority_queue< std::vector<int>, std::vector< std::vector<int> >, std::greater< std::vector<int> > > q;
