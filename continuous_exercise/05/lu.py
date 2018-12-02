@@ -46,7 +46,11 @@ if __name__ == "__main__":
 		for j in range(size):
 			A[i, j] = 1 / (i + j + 1)
 			A[j, i] = 1 / (i + j + 1)
-	print(A)
+	#print(A)
+	T = np.full((10, 10), 0.2)
+	B = np.eye(10) + np.triu(T, k = 1) - np.triu(T, k = 2) + np.triu(T, k = -1) - np.triu(T, k = 0)
+	print(B)
 	b = np.zeros(size)
 	#LU(A, b)()
-	LU(np.array([[8,72,32],[1,11,18],[5,54,86]], dtype = float), b)()
+	LU(B, b)()
+	#LU(np.array([[8,72,32],[1,11,18],[5,54,86]], dtype = float), b)()
