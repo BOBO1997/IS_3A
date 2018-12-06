@@ -1,0 +1,85 @@
+import numpy as np
+np.set_printoptions(precision = 3)
+
+class LU:
+	def __init__(self, A, b = None):
+		self.size = A.shape[0]
+		self.L = np.eye(self.size)
+		self.U = A
+		self.A = A
+		self.b = b
+		self.c = np.zeros(self.size)
+
+	def decompose(self, col):
+		if col == self.size - 1:
+			return
+		else:
+			for i in range(self.size - col - 1):
+				self.L[i + col + 1, col] = self.U[i + col + 1, col] / self.U[col, col]
+				self.U[i + col + 1, col:] = self.U[i + col + 1, col:] - self.L[i + col + 1, col] * self.U[col, col:]
+			self.decompose(col + 1)
+
+	def get_LU(self):
+		self.decompose(0)
+		print("L = \n", self.L)
+		print("U = \n", self.U)
+		print("LU = \n", self.L @ self.U)
+
+	def solve_L(self, b):
+		c = np.zeros(self.size)
+		for i in range(self.size):
+			c[i] = (b[i] - self.L[i, :i] @ c[:i].T) / self.L[i, i]
+		print("c = \n", c)
+		return c
+
+	def solve_U(self, c):
+		x = np.zeros(self.size)
+		l = [i for i in range(self.size)]
+		print(l[::-1])
+		for i in l[::-1]:
+			if i == self.size - 1:
+				x[i] = c[i] / self.U[i, i]
+			else:
+				x[i] = (c[i] - self.U[i, i + 1:] @ x[i + 1:].T) / self.U[i, i]
+		print("x = \n", x)
+		return x
+
+	def solve_A(self, b):
+		assert b != None
+		c = self.solve_L(b)
+		x = self.solve_U(c)
+		return x
+
+	def solve_lib(self, A, b):
+		print("solved by library = \n", np.linalg.solve(A, b))
+
+	def get_invA(self):
+		inv_A = np.zeros((self.size, 0))
+		for i in range(self.size):
+			b = np.zeros(self.size)
+			b[i] = 1
+			c = self.solve_L(b)
+			self.solve_lib(self.L, b)
+			x = self.solve_U(c)
+			self.solve_lib(self.U, c)
+			self.solve_lib(self.A, b)
+			inv_A = np.append(inv_A, np.reshape(x, (self.size, 1)), axis = 1)
+		print("my invA = \n", inv_A)
+		print("A * invA = \n", self.A @ inv_A)
+	
+	def get_lib_inv(self):
+		print("invA by library = \n", np.linalg.inv(self.A))
+
+	def __call__(self):
+		self.get_LU()
+		self.get_lib_inv()
+		self.get_invA()
+
+if __name__ == "__main__":
+	T = np.full((10, 10), 0.2)
+	B = np.eye(10) + np.triu(T, k = 1) - np.triu(T, k = 2) + np.triu(T, k = -1) - np.triu(T, k = 0)
+	print("B = \n", B)
+	#LU(B)()
+	A = np.array([[8,72,32],[1,11,18],[5,54,86]], dtype = float)
+	print("A = \n", A)
+	LU(A)()
