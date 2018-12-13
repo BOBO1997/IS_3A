@@ -1,7 +1,7 @@
 import numpy as np
 np.set_printoptions(precision = 3)
 
-class LU:
+class outer:
 	def __init__(self, A):
 		self.size = A.shape[0]
 		self.L = np.eye(self.size)
@@ -29,7 +29,7 @@ if __name__ == "__main__":
 	T = np.full((10, 10), 0.2)
 	B = np.eye(10) + np.triu(T, k = 1) - np.triu(T, k = 2) + np.triu(T, k = -1) - np.triu(T, k = 0)
 	print("B = \n", B)
-	LU(B)()
+	outer(B)()
 	A = np.array([[8,72,32],[1,11,18],[5,54,86]], dtype = float)
 	print("A = \n", A)
-	LU(A)()
+	outer(A)()
