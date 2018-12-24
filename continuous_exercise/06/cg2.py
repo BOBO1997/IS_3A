@@ -1,6 +1,37 @@
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+
+class SOR:
+	def __init__(self, A, x, b, omega, error, iters):
+		self.A = A # 不変
+		self.x = x # 更新値
+		self.b = b # 不変
+		self.omega = omega # 不変
+		self.error = error
+		self.iters = iters
+
+	def step(self):
+		for i in range(self.x.shape[0]):
+			if i == 0:
+				self.x[i] = self.x[i] + self.omega * (self.b[i] - self.A[i, :] @ self.x[:]) / self.A[i, i]
+			else:
+				self.x[i] = self.x[i] + self.omega * (self.b[i] - self.A[i, :i] @ self.x[:i] - self.A[i, i:] @ self.x[i:]) / self.A[i, i]
+
+	def calc_relative_error(self):
+		error = np.linalg.norm(self.b - self.A @ self.x) / np.linalg.norm(self.b)
+		#print(error)
+		return error
+
+	def __call__(self):
+		for k in range(self.iters):
+			if self.calc_relative_error() >= self.error:
+				self.step()
+			else:
+				break
+			#print(k)
+		return self.x
 
 class CG:
 	def __init__(self, A, b, error = 0.001):
@@ -30,16 +61,21 @@ class CG:
 		print("beta = \n", self.beta)
 		print("error = \n", self.error)
 	
-	def correct(self):
-		print("correct answer = ")
-		print(np.linalg.solve(self.A, self.b_origin))
+	def correct(self, print_flag):
+		ans = np.linalg.solve(self.A, self.b_origin)
+		if print_flag == 1:
+			print("correct answer = ")
+			print(ans)
+			return None
+		else:
+			return ans
 	
 	def make_error_graph(self):
 		iters = self.errors.shape[0]
 		plt.yscale("log")
 		plt.grid(which = "both")
 		plt.plot(np.linspace(1, iters, iters), self.errors)
-		plt.scatter(np.linspace(1, iters, iters), self.errors)
+		plt.scatter(np.linspace(1, iters, iters), self.errors, c = "r", s = 10)
 		plt.xlabel("iters")
 		plt.ylabel("error")
 		plt.savefig("errors.png")
@@ -74,25 +110,17 @@ class CG:
 			self.solve_flag = 1
 		print("x = ")
 		print(self.x)
-		self.correct()
+		self.correct(1)
 
 class Poisson:
-	def __init__(self, size, u, f):
+	def __init__(self, size, num, f, u):
 		self.size = size
-		self.num = size - 1
+		self.num = num - 1 # 内部の点の個数
 		self.cells = self.num * self.num
-		self.range = np.linspace(0, self.num - 1, self.num)
-
-		self.u = u
+		self.h = size / num
+		self.range = np.linspace(0, size, self.num)
 		self.f = f
-		
-		I = np.eye(self.num)
-		O = np.ones((self.num, self.num))
-		U = np.triu(O, k = 1) - np.triu(O, k = 2)
-		L = np.triu(O, k = -1) - np.triu(O, k = 0)
-		B = U + L
-		self.A = - 4 * np.kron(I, I) + np.kron(B, I) + np.kron(I, B)
-		self.b = np.reshape(self.calc_b(), self.cells)
+		self.u = u
 
 	def calc_b(self):
 		b = np.zeros((self.num, self.num))
@@ -108,6 +136,12 @@ class Poisson:
 				u[i, j] = self.u(x, y)
 		return u
 
+	def diffsum(self, result, u):
+		return np.sum((result - u) ** 2) / 2
+
+	def diffmap(self, result, u):
+		return result - u
+
 	def plot(self, values, name):
 		plt.pcolor(self.range, self.range, values)
 		plt.gca().set_aspect('equal', adjustable='box')
@@ -120,30 +154,46 @@ class Poisson:
 		fig = plt.figure() #プロット領域の作成
 		ax = fig.gca(projection='3d') #プロット中の軸の取得。gca は"Get Current Axes" の略。
 		ax.plot_wireframe(x_range, y_range, values, color='blue',linewidth=0.3)
+		#ax.plot_surface(x_range, y_range, result, rstride=1, cstride=1, cmap='hsv', linewidth=0.3)
 		plt.savefig("%s3d.png" %(name))
 		plt.clf()
-
+		
 	def __call__(self):
-		print(self.A)
-		print(self.b)
-		cg = CG(self.A, self.b)
-		result = cg.solve()
+		I = np.eye(self.num)
+		O = np.ones((self.num, self.num))
+		U = np.triu(O, k = 1) - np.triu(O, k = 2)
+		L = np.triu(O, k = -1) - np.triu(O, k = 0)
+		B = U + L
+		A = - 4 * np.kron(I, I) + np.kron(B, I) + np.kron(I, B)
+		print(self.h)
+		print(A.shape)
+		print(A)
+		x = np.zeros(self.cells)
+		print(x.shape)
+		b = np.reshape(self.calc_b(), self.cells)
+		print(b.shape)
+		print(b)
+		result = SOR(A / self.h ** 2, x, b, 1.95, 0.00000000001, 1000)() # ここのxは端っこは含まれていない
 		result = np.reshape(result, (self.num, self.num))
-		print(result)
-		self.plot(result, "poisson")
-		self.plot3d(result, "poisson")
+		print("diff = ", self.diffsum(result, self.calc_u()))
+		diff = self.diffmap(result, self.calc_u())
+		
+		self.plot(result, "sor_poisson")
+		#self.plot(diff, "diff")
+		self.plot3d(result, "sor_poisson")
+		#self.plot3d(diff, "diff")
+		result = CG(A / self.h ** 2, b).solve() # ここのxは端っこは含まれていない
+		#result = CG(A / self.h ** 2, b).correct(0) # ここのxは端っこは含まれていない
+		result = np.reshape(result, (self.num, self.num))
+		self.plot(result, "cg_poisson")
+		self.plot3d(result, "cg_poisson")
+		
+def f(x, y):
+	return 2 * (x * (x - 1) + y * (y - 1))
 
 def u(x, y):
 	return x * (x - 1) * y * (y - 1)
 
-def f(x, y):
-	return 2 * (x * (x - 1) + y * (y - 1))
-
 if __name__ == "__main__":
-	#T = np.full((10, 10), 0.2)
-	#B = np.eye(10) + np.triu(T, k = 1) - np.triu(T, k = 2) + np.triu(T, k = -1) - np.triu(T, k = 0)
-	#b = np.array([1,2,3,4,5,6,7,8,9,10])
-	#print(B)
-	#CG(B, b, error = 0.000000000001)()
-	size = 5
-	Poisson(size, u, f)()
+	size, num = 1, 51
+	result = Poisson(size, num, f, u)()
