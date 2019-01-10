@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 void dgemm(	int m, int n, int k, 
 			double alpha, double* A, double* B,
@@ -11,11 +12,8 @@ void dgemm(	int m, int n, int k,
 		for (int j = 0; j < n; j++) {
 			double ab = 0;
 			for (int l = 0; l < k; l++) {
-				printf("%lf\n", A[l + i * k]);
-				printf("%lf\n", B[j * k + l]);
-				ab += alpha * A[l + i * k] * B[j * k + l];
+				ab += alpha * A[l + i * k] * B[j + l * n];
 			}
-			printf("\n");
 			AB[j + i * n] = ab;
 		}
 	}
@@ -26,16 +24,30 @@ void dgemm(	int m, int n, int k,
 	}
 }
 
+void print_matrix(int m, int n, double* A) {
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			printf("%12.0f", A[j + i * n]);
+		}
+		printf("\n");
+	}
+}
+
 int main(){
 	double *A, *B, *C, *AB;
 	int m, n, k;
 	double alpha, beta;
 
-	m = 2, k = 3, n = 2;
+	struct timeval tv1, tv2;
+	m = 1000, k = 1000, n = 1000;
 
-	int min_size = 10;
-	alpha = 1.0; beta = 1.0;
+	printf("size of A = (%d, %d)\n", m, k);
+	printf("size of B = (%d, %d)\n", k, n);
+	printf("size of C = (%d, %d)\n", m, n);
 
+	//int min_size = 100;
+	alpha = 1.0; beta = 0.0;
+	
 	A = (double *)malloc(m * k * sizeof(double));
 	B = (double *)malloc(k * n * sizeof(double));
 	C = (double *)malloc(m * n * sizeof(double));
@@ -49,30 +61,21 @@ int main(){
 	for (int i = 0; i < k * n; i++) B[i] = (double)(-i - 1);
 	for (int i = 0; i < m * n; i++) C[i] = 0.0;
 	for (int i = 0; i < m * n; i++) AB[i] = 0.0;
-
-	dgemm(m, n, k, alpha, A, B, beta, C, AB);
 	
+	gettimeofday(&tv1, NULL);
+	dgemm(m, n, k, alpha, A, B, beta, C, AB);
+	gettimeofday(&tv2, NULL);
+
+	printf("%ld %06lu\n", tv1.tv_sec, tv1.tv_usec);
+	printf("%ld %06lu\n", tv2.tv_sec, tv2.tv_usec);
+	/*
 	printf("\nA = \n");
-	for (int i = 0; i < min(m, min_size); i++) {
-		for (int j = 0; j < min(k, min_size); j++) {
-			printf("%12.0f", A[j + i * k]);
-		}
-		printf("\n");
-	}
+	print_matrix(m, k, A)
 	printf("\nB = \n");
-	for (int i = 0; i < min(k, min_size); i++) {
-		for (int j = 0; j < min(n, min_size); j++) {
-			printf("%12.0f", B[j + i * n]);
-		}
-		printf("\n");
-	}
+	print_matrix(k, n, B)
 	printf("\nC = \n");
-	for (int i = 0; i < min(m, min_size); i++) {
-		for (int j = 0; j < min(n, min_size); j++) {
-			printf("%12.0f", C[j + i * n]);
-		}
-		printf("\n");
-	}
+	print_matrix(m, n, C)
+	*/
 	free(A);
 	free(B);
 	free(C);

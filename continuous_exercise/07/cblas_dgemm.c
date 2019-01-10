@@ -5,6 +5,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "mkl.h"
+#include <sys/time.h>
+
+void print_matrix(int m, int n, double* A) {
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			printf("%12.0f", A[j + i * n]);
+		}
+		printf("\n");
+	}
+}
 
 int main()
 {
@@ -16,7 +26,13 @@ int main()
 			" Intel(R) MKL function dgemm, where A, B, and	C are matrices and \n"
 			" alpha and beta are double precision scalars\n\n");
 	*/
-	m = 2, k = 3, n = 2;
+	
+	struct timeval tv1, tv2;
+	
+	m = 1000, k = 1000, n = 1000;
+	printf("size of A = (%d, %d)\n", m, k);
+	printf("size of B = (%d, %d)\n", k, n);
+	printf("size of C = (%d, %d)\n", m, n);
 	// m = 2000, k = 200, n = 1000;
 	int min_size = 100; // bobo custom
 	/*
@@ -53,35 +69,22 @@ int main()
 
 	// 本処理
 	//printf (" Computing matrix product using Intel(R) MKL dgemm function via CBLAS interface \n\n");
+	gettimeofday(&tv1, NULL);
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 
 				m, n, k, alpha, A, k, B, n, beta, C, n);
+	gettimeofday(&tv2, NULL);
+	printf("%ld %06lu\n", tv1.tv_sec, tv1.tv_usec);
+	printf("%ld %06lu\n", tv2.tv_sec, tv2.tv_usec);
 	//printf ("\n Computations completed.\n\n");
-
+	/*
 	// 結果を表示
 	printf (" Top left corner of matrix A: \n");
-	for (i = 0; i < min(m, min_size); i++) {
-		for (j = 0; j < min(k, min_size); j++) {
-			printf ("%12.0f", A[j+i*k]);
-		}
-		printf ("\n");
-	}
-
+	print_matrix(m, k, A);
 	printf ("\n Top left corner of matrix B: \n");
-	for (i=0; i<min(k,min_size); i++) {
-		for (j=0; j<min(n,min_size); j++) {
-			printf ("%12.0f", B[j+i*n]);
-		}
-		printf ("\n");
-	}
-	
+	print_matrix(k, n, B);
 	printf ("\n Top left corner of matrix C: \n");
-	for (i=0; i<min(m,min_size); i++) {
-		for (j=0; j<min(n,min_size); j++) {
-			printf ("%12.5G", C[j+i*n]);
-		}
-		printf ("\n");
-	}
-
+	print_matrix(m, n, C);
+	*/
 	//printf ("\n Deallocating memory \n\n");
 	mkl_free(A);
 	mkl_free(B);
