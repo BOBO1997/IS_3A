@@ -28,7 +28,7 @@ int main()
 	*/
 	
 	struct timeval tv1, tv2;
-	int temp = 50;
+	int temp = 4000;
 	m = temp, k = temp, n = temp;
 	printf("size of A = (%d, %d)\n", m, k);
 	printf("size of B = (%d, %d)\n", k, n);
