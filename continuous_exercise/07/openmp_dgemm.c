@@ -42,7 +42,7 @@ int main(){
 	double alpha, beta;
 
 	struct timeval tv1, tv2;
-	int temp = 700;
+	int temp = 1500;
 	m = temp, k = temp, n = temp;
 
 	printf("size of A = (%d, %d)\n", m, k);
