@@ -39,7 +39,8 @@ int main(){
 	double alpha, beta;
 
 	struct timeval tv1, tv2;
-	m = 1000, k = 1000, n = 1000;
+	int temp = 700;
+	m = temp, k = temp, n = temp;
 
 	printf("size of A = (%d, %d)\n", m, k);
 	printf("size of B = (%d, %d)\n", k, n);
